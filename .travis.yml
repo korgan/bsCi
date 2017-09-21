@@ -19,8 +19,28 @@
 # Travis CI documentation (see above).
 #
 
+language: python
+python:
+- '2.7'
+sudo: false
+cache:
+  directories:
+  - ~/.platformio
+env:
+- PLATFORMIO_CI_SRC=src/
+
+install:
+- pip install -U platformio
+- platformio lib install 567 562
+script:
+- platformio run -e nodemcu_deploy
+
 deploy:
-on:
-repo: korgan/bsCi
-all_branches: true
-condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$
+  on:
+    repo: korgan/bsCi
+    all_branches: true
+    condition: $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$
+  skip_cleanup: true
+  provider: releases
+  overwrite: true
+  file: ".pioenvs/nodemcu_deploy/firmware.bin"
