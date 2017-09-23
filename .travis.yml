@@ -35,15 +35,15 @@ git:
 install:
 - pip install -U platformio
 - platformio lib install 567 562
+after_install:
 
 script:
 - platformio run -e nodemcu
 
 after_success:
   # Check that current branch is master, or quit
-  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then echo "Deployments are only done for the master branch. Current branch is $TRAVIS_BRANCH"; exit 0; fi
-  - echo "Travis tag is $TRAVIS_TAG"
-  - echo "Deploying build $TRAVIS_BUILD_NUMBER"
+  - if [[ -z "${TRAVIS_TAG}" ]]; then echo "Deployments are only done for tagged builds."; exit 0; fi
+    echo "Deploying build $TRAVIS_BUILD_NUMBER"
 
 deploy:
   on:
